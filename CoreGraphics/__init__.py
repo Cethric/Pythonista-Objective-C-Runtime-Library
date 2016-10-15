@@ -1,7 +1,4 @@
-import sys
-import os
-from ctypes import *
-import math
+# from ctypes import *
 
 # try:
 #     from .. import *
@@ -11,7 +8,7 @@ import math
 #         sys.path.append(path)
 #     from objc import *
 
-try:    
+try:
     from transforms import *
 except (ImportError, SystemError):
     from .transforms import *
@@ -19,7 +16,7 @@ try:
     from geometry import *
 except (ImportError, SystemError):
     from .geometry import *
-    
+
 CGClasses = [
     'CGBitmapContext',
     'CGColor',
@@ -49,32 +46,34 @@ CGClasses = [
     'CGShading'
 ]
 
+
 def loadCGClass(klass):
     if klass in CGClasses:
         return findClass(klass)
     raise ValueError("'{}' is not a CG Class".format(klass))
-    
-    
+
 
 def main():
+    import math
+
     print(CGAfflineTransformMake(0, 0, 0, 0, 1, 3))
     print(CGAffineTransformMakeRotation(math.radians(0)))
     print(CGAffineTransformMakeScale(10, 10))
     print(CGAffineTransformMakeTranslation(5, 10))
     print(CGAffineTransformTranslate(CGAffineTransformIdentity(), 10, 5))
     print(CGAffineTransformScale(CGAffineTransformIdentity(), 10, 5))
-    print(CGAffineTransformRotate(CGAffineTransformIdentity(), math.radians(7)))
+    print(CGAffineTransformRotate(
+        CGAffineTransformIdentity(), math.radians(7)
+    ))
     print(CGAffineTransformInvert(CGAffineTransformIdentity()))
     print(CGAffineTransformConcat(
         CGAffineTransformIdentity(),
         CGAffineTransformMakeRotation(math.radians(79))
     ))
-    
-    print(CGPointApplyAffineTransform(CGPoint(10, 10), CGAffineTransformIdentity()))
-    
-    
-    
-    
+    print(CGPointApplyAffineTransform(
+        CGPoint(10, 10),
+        CGAffineTransformIdentity()
+    ))
+
 if __name__ == '__main__':
     main()
-        

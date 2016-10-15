@@ -1,4 +1,4 @@
-from ctypes import *
+from ctypes import c_int32
 
 CGError = c_int32
 
@@ -37,6 +37,6 @@ __all__ = [
     'kCGErrorApplicationIncorrectExecutableFormatFound',
     'kCGErrorApplicationIsLaunching', 'kCGErrorApplicationAlreadyRunning',
     'kCGErrorApplicationCanOnlyBeRunInOneSessionAtATime',
-    'kCGErrorClassicApplicationsMustBeLaunchedByClassic', 'kCGErrorForkFailed', 
-    qq'kCGErrorRetryRegistration'
+    'kCGErrorClassicApplicationsMustBeLaunchedByClassic', 'kCGErrorForkFailed',
+    'kCGErrorRetryRegistration'
 ]

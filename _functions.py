@@ -1,14 +1,27 @@
-from ctypes import *
+from ctypes import (
+    cdll, CDLL, POINTER, byref,
+    c_bool, c_size_t,
+    c_void_p,
+    c_char_p,
+    c_int, c_uint, c_uint8
+)
+
 try:
-    from _structures import *
+    from _structures import (
+        objc_property_attribute_t, objc_method_description
+    )
 except ImportError:
-    from ._structures import *
+    from ._structures import (
+        objc_property_attribute_t, objc_method_description
+    )
+
 
 try:
     c = cdll.LoadLibrary("Foundation.framework/Foundation")
     c = cdll.LoadLibrary("Cocoa.framework/Cocoa")
 except OSError:
-    pass  # print("Can not Dynamically load Foundation.framework or Cocoa.framework")
+    # print("Can not Dynamically load Foundation.framework or Cocoa.framework")
+    pass
 c = CDLL(None)
 
 free = c.free
@@ -37,11 +50,11 @@ class_getInstanceSize.restype = c_size_t
 
 class_getInstanceVariable = c.class_getInstanceVariable
 class_getInstanceVariable.argtypes = [c_void_p, c_char_p]
-class_getInstanceVariable.restype = objc_ivar
+class_getInstanceVariable.restype = c_void_p
 
 class_getClassVariable = c.class_getClassVariable
 class_getClassVariable.argtypes = [c_void_p, c_char_p]
-class_getClassVariable.restype = objc_ivar
+class_getClassVariable.restype = c_void_p
 
 class_addIvar = c.class_addIvar
 class_addIvar.argtypes = [c_void_p, c_char_p, c_size_t, c_uint8, c_char_p]
@@ -49,7 +62,7 @@ class_addIvar.restype = c_bool
 
 class_copyIvarList = c.class_copyIvarList
 class_copyIvarList.argtypes = [c_void_p, POINTER(c_uint)]
-class_copyIvarList.restype = POINTER(objc_ivar)
+class_copyIvarList.restype = POINTER(c_void_p)
 
 class_getIvarLayout = c.class_getIvarLayout
 class_getIvarLayout.argtypes = [c_void_p]
@@ -108,7 +121,9 @@ class_addProtocol.argtypes = [c_void_p, c_void_p]
 class_addProtocol.restype = c_bool
 
 class_addProperty = c.class_addProperty
-class_addProperty.argtypes = [c_void_p, c_char_p, objc_property_attribute_t, c_uint]
+class_addProperty.argtypes = [
+    c_void_p, c_char_p, objc_property_attribute_t, c_uint
+]
 class_addProperty.restype = c_bool
 
 class_replaceProperty = c.class_replaceProperty
@@ -243,15 +258,15 @@ objc_removeAssociatedObjects = c.objc_removeAssociatedObjects
 objc_removeAssociatedObjects.argtypes = [c_void_p]
 objc_removeAssociatedObjects.restype = None
 
-## objc_msgSend stub
+# objc_msgSend stub
 objc_msgSend = c.objc_msgSend
 objc_msgSend.restype = c_void_p
 
-## objc_msgSendSuper stub
+# objc_msgSendSuper stub
 objc_msgSendSuper = c.objc_msgSendSuper
 objc_msgSendSuper.restype = c_void_p
 
-## method_invoke stub
+# method_invoke stub
 method_invoke = c.method_invoke
 method_invoke.restype = c_void_p
 method_invoke.argtypes = [c_void_p, c_void_p]
@@ -285,7 +300,9 @@ method_getNumberOfArguments.argtypes = [c_void_p]
 method_getNumberOfArguments.restype = c_uint
 
 method_getArgumentType = c.method_getArgumentType
-method_getArgumentType.argtypes = [c_void_p, c_uint, POINTER(c_char_p), c_size_t]
+method_getArgumentType.argtypes = [
+    c_void_p, c_uint, POINTER(c_char_p), c_size_t
+]
 method_getArgumentType.restype = None
 
 method_getDescription = c.method_getDescription
@@ -345,7 +362,9 @@ objc_registerProtocol.argtypes = [c_void_p]
 objc_registerProtocol.restype = None
 
 protocol_addMethodDescription = c.protocol_addMethodDescription
-protocol_addMethodDescription.argtypes = [c_void_p, c_void_p, c_char_p, c_bool, c_bool]
+protocol_addMethodDescription.argtypes = [
+    c_void_p, c_void_p, c_char_p, c_bool, c_bool
+]
 protocol_addMethodDescription.restype = None
 
 protocol_addProtocol = c.protocol_addProtocol
@@ -353,7 +372,9 @@ protocol_addProtocol.argtypes = [c_void_p, c_void_p]
 protocol_addProtocol.restype = None
 
 protocol_addProperty = c.protocol_addProperty
-protocol_addProperty.argtypes = [c_void_p, c_char_p, c_void_p, c_uint, c_bool, c_bool]
+protocol_addProperty.argtypes = [
+    c_void_p, c_char_p, c_void_p, c_uint, c_bool, c_bool
+]
 protocol_addProperty.restype = None
 
 protocol_getName = c.protocol_getName
@@ -365,7 +386,9 @@ protocol_isEqual.argtypes = [c_void_p, c_void_p]
 protocol_isEqual.restype = c_bool
 
 protocol_copyMethodDescriptionList = c.protocol_copyMethodDescriptionList
-protocol_copyMethodDescriptionList.argtypes = [c_void_p, c_bool, c_bool, c_uint]
+protocol_copyMethodDescriptionList.argtypes = [
+    c_void_p, c_bool, c_bool, c_uint
+]
 protocol_copyMethodDescriptionList.restype = c_void_p
 
 protocol_getMethodDescription = c.protocol_getMethodDescription
@@ -440,6 +463,7 @@ UIApplicationMain.restype = c_int
 NSStringFromClass = c.NSStringFromClass
 NSStringFromClass.argtypes = [c_void_p]
 NSStringFromClass.restype = c_void_p
+
 
 def NSGetSizeAndAlignment(typeptr):
     func = c.NSGetSizeAndAlignment
